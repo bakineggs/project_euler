@@ -1,9 +1,9 @@
-primes = [2, 3]
+prime_candidates = (2..2000000).collect
+primes = []
 
-i = 5
-while i < 2000000
-  primes.push i unless primes.any?{|prime| i % prime == 0}
-  i += 2
+while !prime_candidates.empty?
+  primes.push prime_candidates.first
+  prime_candidates.reject!{|candidate| candidate % primes.last == 0}
 end
 
 puts primes.inject{|sum, number| sum + number}
