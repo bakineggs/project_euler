@@ -8,21 +8,31 @@ class Fixnum
     end
   end
 
-  def factors
-    raise NotImplementedError if self <= 0
-    return @factors unless @factors.nil?
-    @factors = [1, self]
-    if smallest_other_factor = ((1..Math.sqrt(self)).collect-@factors).find{|number| self % number == 0}
-      @factors.push smallest_other_factor
-      largest_other_factor = self / smallest_other_factor
-      @factors += largest_other_factor.factors
-      @factors += largest_other_factor.factors.map{|factor| factor * smallest_other_factor}
+  def prime_factors
+    if @prime_factors.nil?
+      @prime_factors = []
+      remaining = self
+      divisor = 2
+      while remaining > 1
+        if remaining % divisor == 0
+          remaining /= divisor
+          @prime_factors.push divisor
+        else
+          divisor += 1
+        end
+      end
     end
-    @factors = @factors.uniq
+    @prime_factors
+  end
+
+  def num_factors
+    prime_factors.uniq.inject(1) do |product, prime|
+      product * (prime_factors.select{|p| p == prime}.length + 1)
+    end
   end
 end
 
 i = 1
-i += 1 while i.triangle.factors.length < 500
+i += 1 while i.triangle.num_factors < 500
 
 puts i.triangle
